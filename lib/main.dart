@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onex/screen_home.dart';
+import 'package:onex/screens/dashboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,11 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'OneX',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: ScreenHome(),
+      home: Dashboard(),
     );
   }
 }

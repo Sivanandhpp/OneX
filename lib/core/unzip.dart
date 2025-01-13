@@ -1,27 +1,42 @@
-// import 'dart:io';
+import 'dart:io';
+import 'package:archive/archive.dart';
+import 'package:path_provider/path_provider.dart';
 
-// import 'package:archive/archive.dart';
-// import 'package:file_picker/file_picker.dart';
+Future<void> unzipFile(String filePath) async {
+    try {
+      // Read the ZIP file
+      final bytes = File(filePath).readAsBytesSync();
+      final archive = ZipDecoder().decodeBytes(bytes);
 
-// void _unzipFile(FilePickerResult result) {
-     
-//       // Get the file path
-//       String filePath = result.files.single.path!;
-//       // Unzip the file
-//       // Read the ZIP file
-//     final bytes = File(filePath).readAsBytesSync();
-//     final archive = ZipDecoder().decodeBytes(bytes);
+      // Get the cache directory
+      final cacheDir = await getTemporaryDirectory();
 
-//     // Clear previous file names
-//     _fileNames.clear();
+      // Clear previous file paths
+    //   filePaths.clear();
 
-//     // Extract file names
-//     for (final file in archive) {
-//       _fileNames.add(file.name);
-//     }
+      // Extract files and filter for JSON files
+      for (final file in archive) {
+        if (file.isFile) {
+          // Check if the file name contains "followers" or "following"
+          if (file.name.contains('followers_and_following')) {
+            // Save the file to the cache directory
+            final filePath =
+                '${cacheDir.path}/instagram/${file.name.split('/').last}';
 
+            final outFile = File(filePath);
+            await outFile.create(recursive: true);
+            await outFile.writeAsBytes(file.content as List<int>);
 
-    
-//     // // Update the UI
-//     // setState(() {});
-//   }
+            // Add the file path to the list
+            // filePaths.add(filePath);
+          }
+        }
+      }
+
+      // Update the UI
+    //   setState(() {});
+    } catch (e) {
+      // Handle any errors that occur during unzipping
+      print("Error unzipping file: $e");
+    }
+  }
